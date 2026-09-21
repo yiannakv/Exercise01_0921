@@ -89,6 +89,19 @@ aggregate(physically_active_7d ~ grade + gender, data= yrbss_1, FUN=mean) |>
 # among female students in grade 12 
 # Ensure that the figure is clearly labeled and includes an appropriate legend
 
+#first we will calculate bmi & filter for only females 
+yrbss_2 <- yrbss_1 %>% mutate(bmi = weight/(height)^2) %>% filter(gender=="Female", grade=="12")
 
+#lets graph the BMI values for each number of physically active days (0-7)
+#we must convert this to a categorical/factor variable 
+
+yrbss_2 <- yrbss_2 %>% mutate(physical_factor = factor(physically_active_7d, levels=0:7,
+                              ordered=TRUE))
+
+#now we will create a box plot of our values 
+ggplot(data=yrbss_2, aes(x=physical_factor,y=bmi))+geom_boxplot()+
+  labs(x="Number of Days Physically Active in a Week",
+       y="BMI (kg/m^2)",
+       title="Relationship Between Physical Activity and BMI among Females")
 
 # Push your completed code to your GitHub repository
