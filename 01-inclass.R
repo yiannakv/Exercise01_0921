@@ -26,60 +26,36 @@ library(tidyverse)
 # Modify the code below such that the grade shows in increasing order
 # and all category labels start with a capital letter
 
+
 install.packages("flextable")
 library(flextable)
 
-library(dplyr)
 yrbss$Grade <- yrbss$grade
-#--------------------------------------------------------------------------
-class(yrbss$grade)
-#assess the type of variable grade is. we see its character type. 
-
-unique(yrbss$grade)
-#this tells us the exact kinds of 'text' in written in the column 
-
-yrbss_1 <- yrbss %>% mutate(grade=na_if(grade, "other"), #replaced "other" with NA 
-                                grade=coalesce(grade, "0"), #swapped all NA for "0" as a text string 
-                                grade=as.numeric(grade)) %>% arrange(grade) #convert to numeric and arrange
-
-
-unique(yrbss_1$grade)
-
-#lets try converting grade to an ordered factor 
-
-yrbss_1$grade <- ordered(yrbss_1$grade, levels=1:5,labels=c("0","9","10","11","12"))
-class(yrbss_1$grade)
-yrbss_1 <- yrbss_1 %>% arrange(grade)
-
-yrbss_1 <- yrbss %>% mutate(grade=na_if(grade, "other"), #replaced "other" with NA 
-                            grade=coalesce(grade, "0"), #swapped all NA for "0" as a text string 
-                            grade=as.factor(grade, ordered=TRUE, levels="0", "9", "10", "11", "12")) %>% arrange(grade) #convert to numeric and arrange
-
-
-yrbss_1$grade <- ordered(yrbss_1$grade, levels="0","9", "10", "11", "12")
-
-
-unique(yrbss_1$grade)
-
-
 yrbss$Gender <- yrbss$gender
 
-unique(yrbss_grade$gender)
-class(yrbss_grade$gender)
+library(dplyr) #to modify the dataset 
 
-#first i will recode the variable names, use replace value function to partially update an existing vector 
-yrbss_grade1 <- yrbss_grade %>% mutate(gender=replace_values(gender,"female" ~ "Female","male"~ "Male"))
+#first we will check what variable types grade and gender are 
+class(yrbss$grade)
+unique(yrbss$grade) #to see what variables are listed 
+class(yrbss$gender)
+unique(yrbss$gender)
 
-                                   
+#they are both character vectors so we will update the following:
+##grade is an ordinal 'factor' level variable' 
+##gender is a factor variable as well
 
-r
 
-z <- summarizor( #this is to perform univariate statistical analysis by group and formats results tabularly 
-  yrbss_grade1[c("grade", "gender")],
+yrbss_1 <- yrbss %>% mutate(grade=coalesce(grade, "0"),
+                            grade=factor(grade, levels=c("9","10","11","12","other","0"), ordered=TRUE))%>%
+  arrange(grade)
+
+#now if we explore the dataset we will see that grade is ordered. 
+
+z <- summarizor(
+  yrbss[c("Grade", "Gender")],
   overall_label = NULL
 )
-#summarizor (x, by = , overall_label = ) #x is the dataset[c(grade, gender column names)-, overall=label is default null]
-
 ft_1 <- as_flextable(z) 
 ft_1
 

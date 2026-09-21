@@ -165,7 +165,9 @@ usethis::git_sitrep()
 
 -Git hub can't host data files that are too large. If you have a git ignore it means git hub will ignore that file. So its on your machine but git ignores it.
 
-Create a file named `.gitignore` in your root directory to keep your repository clean. Add these patterns:
+Create a file named `.gitignore` in your root directory to keep your repository clean. Create new file, and type .gitignore. \
+\
+Add these patterns (don't need to 'run' them or anything)
 
 ``` text
 # Python & R environments
@@ -206,6 +208,8 @@ data/
   - **Publish to GitHub public repository**
   - **Publish to GitHub private repository**
 - Positron creates the repository online and pushes your code automatically!
+
+You should see the repository on your online GitHub account. The local repository and the online repository are now connected.
 
 ------------------------------------------------------------------------
 
