@@ -46,14 +46,23 @@ unique(yrbss$gender)
 ##gender is a factor variable as well
 
 
-yrbss_1 <- yrbss %>% mutate(grade=coalesce(grade, "0"),
-                            grade=factor(grade, levels=c("9","10","11","12","other","0"), ordered=TRUE))%>%
+yrbss_1 <- yrbss %>% mutate(grade=factor(grade, levels=c("9","10","11","12","other"), ordered=TRUE))%>%
   arrange(grade)
+
 
 #now if we explore the dataset we will see that grade is ordered. 
 
+#next lets convert gender to a factor and modify the factor names
+yrbss_1 <- yrbss_1 %>% mutate(gender=replace_values(gender,"female" ~ "Female","male"~ "Male"),
+                              gender=factor(gender, levels=c("Male","Female")))
+
+#double check this worked 
+unique(yrbss_1$gender)
+
+
+
 z <- summarizor(
-  yrbss[c("Grade", "Gender")],
+  yrbss_1[c("grade", "gender")],
   overall_label = NULL
 )
 ft_1 <- as_flextable(z) 
@@ -70,10 +79,10 @@ ft_1
 # no one correct way to do this
 # Ensure that the figure is clearly labeled and includes an appropriate legend
 
-aggregate(xxx) |>
-  ggplot(aes(xxx)) + 
-  geom_line()
-...
+aggregate(physically_active_7d ~ grade + gender, data= yrbss_1, FUN=mean) |> 
+  ggplot(aes(x=grade, y= physically_active_7d, group=gender, colour=gender)) + 
+  geom_line()+labs(x="Grade", y="# of Days", 
+                  title="Average Number of Days Physically Active in a Week")
 
 
 # Create a plot that shows the relationship betwen physical activity and bmi
